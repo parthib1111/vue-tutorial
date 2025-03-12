@@ -7,12 +7,9 @@
 </head>
 <body>
     <div id="app">
-        <ol>
-            <li v-for="(index,item) in images" :key="index">
-                <img :src="item.src" alt="Supercar" width="300"/>
-                <p>{{item.value}}</p>
-            </li>
-        </ol>
+        <p v-for="(x, index) in manyFoods">
+            {{ index }}: "{{ x }}" <br>
+        </p>
     </div>
 </body>
 
@@ -24,28 +21,15 @@
     const app = Vue.createApp({
         data() {
             return{
-                    images: [
-                    {
-                        src: './photo-1.avif',
-                        value: 'Lamborghini Aventador'
-                    },
-                    {
-                        src: 'https://upload.wikimedia.org/wikipedia/commons/3/37/Ferrari_logo.svg', 
-                        value: 'Ferrari 488 GTB'
-                    },
-                    {
-                        src: 'https://upload.wikimedia.org/wikipedia/commons/f/f3/Mercedes-Benz_logo_2010.svg',
-                        value: 'Mercedes AMG GT'
-                    },
-                    {
-                        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Bugatti_logo.svg/1024px-Bugatti_logo.svg.png',
-                        value: 'Bugatti Chiron'
-                    },
-                    {
-                        src: 'https://upload.wikimedia.org/wikipedia/commons/9/9b/Aston_Martin_logo.svg', 
-                        value: 'Aston Martin DB11'
-                    }
-                ] 
+                    manyFoods: [
+                        'Burrito',
+                        'Salad',
+                        'Cake',
+                        'Soup',
+                        'Fish',
+                        'Pizza',
+                        'Rice'
+                    ]
             }
         }
     });
