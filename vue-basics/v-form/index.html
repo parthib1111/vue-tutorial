@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Form</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        button {
+            background-color:blue; 
+            color:white; 
+            padding: 10px 20px; 
+            cursor: pointer;
+            border: none;
+            border-radius: 12px;
+        }
+        li {
+            border-radius: 5px;
+            padding: 5px;
+            margin: 2px;
+            background-color: rgb(211, 254, 211);
+        }
+        .impClass {
+            background-color: rgb(255, 202, 202);
+            font-weight: bold;
+        }
+        #ulFound li {
+            text-decoration: line-through;
+            background-color: rgb(230,230,230);
+        }
+    </style>
+</head>
+<body style="background-color: gray; font-size: xx-large;">
+    <div id="app" :style="marginTop = '4px'">
+        <div>
+            <h1>Shopping List</h1>
+            <form v-on:submit.prevent="handleSubmit">
+                <p>What do you need? <input type="text" required placeholder="Item name..." v-model="itemName"/></p>
+                <p>How many? <input type="number" required placeholder="item count..." v-model="itemCount"/></p>
+                <p>Important?
+                    <label>
+                        <input type="checkbox" v-model="itemImportant"/>
+                        {{ isImportant }}
+                    </label>
+                </p>
+                <button type="submit">Add item</button>
+            </form>
+        </div>
+        <div>
+            <p><strong>Total items:</strong></p>
+            <ul>
+                <li v-for="item in items" 
+                    :class="{impClass: item.itemImportant}"
+                    @:click="item.found = !item.found"
+                    v-show="!item.found">
+                        {{item.itemName}}  {{ item.itemCount}}
+                </li>
+            </ul>
+            <ul id="ulFound">
+                <li v-for="item in items" 
+                    :class="{impClass: item.itemImportant}"
+                    @:click="item.found = !item.found"
+                    v-show="item.found">
+                        {{item.itemName}}  {{ item.itemCount}}
+                </li>
+            </ul>
+            
+        </div>
+        
+        <div>
+            
+        </div>
+    </div>
+</body>
+
+<script>
+    Vue.createApp({
+        data() {
+            return{
+                itemName: null,
+                itemCount: null,
+                itemImportant: false,
+                items:[
+                    {
+                        itemName : 'Tomato',
+                        itemCount: 2,
+                        itemImportant: false,
+                        found: false
+                    }
+                ]
+            }
+        },
+        computed:{
+            isImportant(){
+                if(this.itemImportant){
+                    return 'yes';
+                }
+                else return 'no';
+            }
+        },
+        methods : {
+            handleSubmit(){
+                let newItem = {
+                    itemName : this.itemName,
+                    itemCount : this.itemCount,
+                    itemImportant: this.itemImportant,
+                    found: false
+                }
+                this.items.push(newItem);
+                this.itemCount = null;
+                this.itemName = null;
+            }
+        }
+    }).mount('#app');
+</script>
+
+</html>

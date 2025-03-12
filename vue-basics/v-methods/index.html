@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Methods</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        #green {
+      background-color: lightgreen;
+    }
+    </style>
+</head>
+<body style="background-color: grey;">
+    <div id="app">
+        <div >
+            <textarea v-on:input="writeText($event,100)" rows="8" cols="20" placeholder="Start writing...+100 to moose"></textarea>
+            <p>{{ text }}</p>
+            <br>
+            <button v-on:click="addMoose(5)">Add 5</button>
+            <button v-on:click="addMoose(-1)">Add -1</button>
+            <button v-on:click="addMoose(1)">Add 1</button>
+            <br>
+            <br>
+            <div :style="{fontSize:'xx-large'}">
+                {{'Moose: '+ moose }}
+            </div>
+
+
+            <!--Event Modifiers-->
+            <br>
+            <div :style="mrginTop = '7px'">
+                <button @:click.once="createAlert">One time button</button>
+                <br>
+                <input @:keydown="getKey"/>
+                <p id="green">{{ keyVal }}</p>
+                <br>
+                <!-- @ not working here -->
+                <textarea v-on:keyup.s="createAlert2" placeholder="click S..."></textarea>
+                <br>
+                <textarea v-on:keydown.ctrl.s="createAlert3" placeholder="press ctrl+s together"></textarea>
+            </div>
+            
+        </div>
+    </div>
+</body>
+<script>
+    Vue.createApp({
+        data() {
+            return{
+                text:'',
+                moose: 0,
+                keyVal: ''
+            }
+        },
+        methods: {
+            writeText(event,num){
+                this.text = event.target.value;
+                this.moose+=num;
+            },
+            addMoose(num){
+                this.moose+=num;
+            },
+            createAlert(){
+                alert("This button is clicked. No more click is left");
+            },
+            getKey(event){
+                this.keyVal = event.key;
+                console.log(event.key);
+            },
+            createAlert2(){
+                alert("The 'S' is being pressed");
+            },
+            createAlert3(){
+                alert("Combination of 'ctrl' and 's' is being pressed!!!");
+            }
+        }
+    }).mount('#app');
+</script>
+</html>

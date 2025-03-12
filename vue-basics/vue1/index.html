@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .pinkBG{
+            background-color: aqua;
+        }
+        .textSize{
+            font-size: xx-large;
+        }
+        .textAlign{
+            text-align: center;
+        }
+        .highlight{
+            color: orange
+        }
+    </style>
+</head>
+<body style="background-color: lightslategrey;">
+    <div id="app">
+        <div v-bind:class="vueClass">
+            {{message}} <br>
+            {{'Random number: ' + Math.ceil(Math.random()*6) }} 
+            <div v-if="typeWriterCount>3">
+                <p>
+                    Many typewriters are there..
+                </p>
+            </div>
+            <div v-else-if="typeWriterCount>0">
+                <p>
+                    Very few typewriters are left!
+                </p>
+            </div>
+            <div v-else>
+                <p>
+                    No typewriter is left
+                </p>
+            </div>
+            <div v-if="text.includes('Parthib')">
+                <p>This is <span :style="{color:'yellow'}">Parthib Sarkar</span></p>
+                <p>This is <span class="highlight">Lucy Sarkar</span></p>
+            </div>
+            <div v-show="showDiv">
+                This div is with v-show tag
+            </div>
+        </div>
+    
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<script>
+
+    const app = Vue.createApp({
+        data() {
+            return {
+                message: "Hello Vue World!",
+                vueClass: {
+                    pinkBG : true,
+                    textSize: true,
+                    textAlign: true
+                },
+                typeWriterCount : 7,
+                text: "I am Parthib, a vue.js programmer",
+                showDiv: true
+        }
+    }
+    })
+
+    app.mount('#app')
+
+</script>
+</body>
+
+</html>
+
+<!-- difference between v-if and v-show is v-if always creates a new element
+when the condition is true and for div-show the element is already there
+only the visibility differs with the true false value.
+So the v0show is better to use instead of v-if for browswer response time -->

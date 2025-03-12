@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        .fontSize {
+            font-size: xx-large;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" style="font-size: xx-large;"}>
+        {{"Counter value is:" + count}}
+        <button v-on:click="count++">Click</button>
+        <div id="lightdiv">
+            <div v-show="lighton">
+                <p :style="{color:'green'}">Light Is On</p>
+            </div>
+            <button v-on:click="lighton = !lighton">Switch Light</button>
+        </div>
+        <div id="inputEvent">
+            <input v-on:input="inputCount++">
+            {{'Input event occurred:' + inputCount}}
+        </div>
+        <div>
+            <p>Move the mouse pointer over the box below</p>
+            <div v-on:mousemove="colorVal = Math.floor(Math.random() * 360)">
+                <p :style="{color: 'hsl(' + colorVal + ', 80%, 80%)', fontSize: 'xx-large'}">
+                    This text color is getting changed!!!
+                    <p><span>backgroundColor: hsl(<strong>{{ colorVal }}</strong>, 90%, 80%)</span></p>
+                </p>
+            </div> 
+        </div>
+    </div>
+</body>
+
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                count: 0,
+                lighton: true,
+                inputCount: 0,
+                colorVal: 100,
+                // Correct the vueClass to properly bind the class names
+                vueClass: {
+                    fontSize: true // Ensures the fontSize class is applied
+                }
+            }
+        }
+    });
+
+    app.mount('#app');
+</script>
+</html>
