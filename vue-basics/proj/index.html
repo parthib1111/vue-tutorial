@@ -9,7 +9,7 @@
 </head>
 <body style="background-color: grey; color: white;">
     <nav    
-            :class="[useDarkNavbar ? 'navbar-dark bg-dark' : 'navbar-light bg-light', 'navbar', 'navbar-expand-lg']"
+            :class="[`navbar-${theme}`, `bg-${theme}`, 'navbar', 'navbar-expand-lg']"
     >
         <div class="container-fluid">
             <a class="navbar-brand">Vue App</a>
@@ -28,7 +28,7 @@
             <form class="d-flex">
                 <button 
                     class="btn btn-primary"
-                    @click.prevent="useDarkNavbar = !useDarkNavbar">
+                    @click.prevent="changeTheme">
                         Toggle Navbar
                 </button>
             </form>
@@ -65,6 +65,7 @@
                 // descText: "This is the description!!!",
 
                 //for each page it has to be seperate
+                theme: 'light',
                 useDarkNavbar: true,
                 activePage: 0,
                 pages: [
@@ -85,6 +86,16 @@
                     },
                 ]
                 
+            }
+        },
+        methods: {
+            changeTheme(){
+                let theme = 'light';
+
+                if(this.theme == 'light'){
+                    theme = 'dark';
+                }
+                this.theme = theme;
             }
         }
     }).mount('body')
