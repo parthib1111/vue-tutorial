@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Vue.js 3 CDN -->
+    <script src="https://unpkg.com/vue@3.2.0/dist/vue.global.js"></script>
+</head>
+<body class="bg-gray-100 font-sans antialiased">
+
+<div id="app" class="flex justify-center items-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
+        <!-- Weather Form -->
+        <h1 class="text-4xl font-semibold text-center text-gray-800 mb-8">Weather App</h1>
+        
+        <div class="mb-6">
+            <label for="location" class="block text-gray-600 text-lg font-medium">Enter City or Zip Code:</label>
+            <input v-model="location" type="text" id="location" class="w-full px-4 py-3 mt-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., London" @keyup.enter="fetchWeatherData">
+        </div>
+
+        <button @click="fetchWeatherData" class="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 transition duration-200">Get Weather</button>
+
+        <!-- Weather Display Section -->
+        <div v-if="weatherData" class="mt-8">
+            <div class="text-center mb-6">
+                <h2 class="text-3xl font-semibold text-gray-800">{{ weatherData.location.name }}, {{ weatherData.location.country }}</h2>
+                <p class="text-gray-500 text-lg">{{ weatherData.location.region }}</p>
+            </div>
+            <div class="flex justify-center items-center mb-8">
+                <img :src="weatherData.current.weather_icons[0]" alt="Weather icon" class="w-20 h-20">
+                <div class="ml-6">
+                    <p class="text-5xl font-bold text-gray-800">{{ weatherData.current.temperature }}°C</p>
+                    <p class="text-2xl text-gray-600">{{ weatherData.current.weather_descriptions[0] }}</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-6">
+                <div class="p-6 border border-gray-200 rounded-lg text-center bg-gray-50 shadow-md">
+                    <p class="text-lg font-medium text-gray-700">Wind</p>
+                    <p class="text-xl text-gray-500">{{ weatherData.current.wind_speed }} km/h</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-lg text-center bg-gray-50 shadow-md">
+                    <p class="text-lg font-medium text-gray-700">Humidity</p>
+                    <p class="text-xl text-gray-500">{{ weatherData.current.humidity }}%</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-lg text-center bg-gray-50 shadow-md">
+                    <p class="text-lg font-medium text-gray-700">UV Index</p>
+                    <p class="text-xl text-gray-500">{{ weatherData.current.uv_index }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forecast Section -->
+        <div v-if="forecastData.length > 0" class="mt-12">
+            <h3 class="text-2xl font-semibold text-center text-gray-800 mb-6">5-Day Forecast</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div v-for="(day, index) in forecastData" :key="index" class="p-6 border border-gray-200 rounded-lg bg-gray-50 shadow-md">
+                    <div class="text-center">
+                        <p class="font-semibold text-gray-700">{{ day.date }}</p>
+                        <img :src="day.weather_icons[0]" alt="Weather icon" class="w-16 h-16 mx-auto my-2">
+                        <p class="text-xl text-gray-800">{{ day.avgtemp_c }}°C</p>
+                        <p class="text-lg text-gray-500">{{ day.weather_descriptions[0] }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                location: '',
+                weatherData: null,
+                forecastData: []
+            };
+        },
+        methods: {
+            async fetchWeatherData() {
+                // Clear previous data
+                this.weatherData = null;
+                this.forecastData = [];
+
+                const apiKey = 'YOUR_API_KEY';  // Replace with your WeatherStack API key
+                const url = `https://api.weatherstack.com/current?access_key=${apiKey}&query=${this.location}&units=m`;
+
+                try {
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    if (data.success === false) {
+                        alert(data.error.info);
+                        return;
+                    }
+                    this.weatherData = data;
+                    this.fetchForecastData();
+                } catch (error) {
+                    console.error(error);
+                    alert('Error fetching weather data');
+                }
+            },
+            async fetchForecastData() {
+                const apiKey = 'YOUR_API_KEY';  // Replace with your WeatherStack API key
+                const url = `https://api.weatherstack.com/forecast?access_key=${apiKey}&query=${this.location}&units=m`;
+
+                try {
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    if (data.success === false) {
+                        alert(data.error.info);
+                        return;
+                    }
+                    this.forecastData = this.formatForecastData(data.forecast);
+                } catch (error) {
+                    console.error(error);
+                    alert('Error fetching forecast data');
+                }
+            },
+            formatForecastData(forecast) {
+                const forecastArray = [];
+                const forecastKeys = Object.keys(forecast);
+
+                // Loop through the forecast keys (next 5 days) and extract data
+                for (let i = 1; i <= 5; i++) {
+                    const date = forecastKeys[i];
+                    forecastArray.push({
+                        date: date,
+                        avgtemp_c: forecast[date].avgtemp_c,
+                        weather_descriptions: forecast[date].weather_descriptions,
+                        weather_icons: forecast[date].weather_icons
+                    });
+                }
+                return forecastArray;
+            }
+        }
+    });
+
+    app.mount('#app');
+</script>
+
+</body>
+</html>
