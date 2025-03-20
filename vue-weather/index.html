@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-400 font-sans">
+    <div id="app" class="max-w-lg mx-auto mt-12 bg-white p-6 rounded-lg shadow-lg">
+        <h1 class="text-4xl font-semibold text-center text-blue-600 mb-8">Weather App</h1>
+    
+
+        <!-- input -->
+        <div class="mb-4">
+            <input type="text" v-model="location" placeholder="Enter city or zip code"
+                class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button type="submit" @click.prevent="getWeather" class="w-full bg-green-500 text-white p-3 mt-4 rounded-md hover:bg-green-600 focus:ring-2 focus:ring-green-500 transition duration-200"
+            >Get Waether</button>
+        </div>
+        <!-- result -->
+        <div v-if="weatherData" class="mt-8">
+            <!-- location section -->
+            <div class="text-center mb-6">
+                <h2 class="text-3xl font-semibold">{{ weatherData.location.name }}, {{weatherData.location.country}}</h2>
+                <p class="text-gray-500 text-lg">{{ weatherData.location.region }}</p>
+            </div>
+            <!-- temperature section -->
+            <div class="flex justify-center items-center">
+                <img :src="weatherData.current.weather_icons[0]" alt="Weather icon" class="w-20 h-20">
+                <div class="ml-6">
+                    <p class="text-6xl font-bold">{{ weatherData.current.temperature }}°C</p>
+                    <p class="text-2xl">{{ weatherData.current.weather_descriptions[0] }}</p>
+                </div>
+                
+            </div>
+            
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-6 mt-6">
+                <div class="p-6 border border-gray-200 rounded-lg text-center bg-gray-50 shadow-md">
+                    <p class="text-lg font-medium text-gray-700">Wind</p>
+                    <p class="text-xl text-gray-500">{{ weatherData.current.wind_speed }} km/h</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-lg text-center bg-gray-50 shadow-md">
+                    <p class="text-lg font-medium text-gray-700">Humidity</p>
+                    <p class="text-xl text-gray-500">{{ weatherData.current.humidity }}%</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-lg text-center bg-gray-50 shadow-md">
+                    <p class="text-lg font-medium text-gray-700">UV Index</p>
+                    <p class="text-xl text-gray-500">{{ weatherData.current.uv_index }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    const app = Vue.createApp({
+        data() {
+            return{
+                location: "",
+                weatherData: {
+"request": {
+"type": "City",
+"query": "Arambagh, India",
+"language": "en",
+"unit": "m"
+},
+"location": {
+"name": "Arambagh",
+"country": "India",
+"region": "West Bengal",
+"lat": "22.883",
+"lon": "87.783",
+"timezone_id": "Asia/Kolkata",
+"localtime": "2025-03-20 11:42",
+"localtime_epoch": 1742470920,
+"utc_offset": "5.50"
+},
+"current": {
+"observation_time": "06:12 AM",
+"temperature": 37,
+"weather_code": 113,
+"weather_icons": [
+"https://cdn.worldweatheronline.com/images/wsymbols01_png_64/wsymbol_0001_sunny.png"
+],
+"weather_descriptions": [
+"Sunny"
+],
+"astro": {
+"sunrise": "05:41 AM",
+"sunset": "05:48 PM",
+"moonrise": "11:06 PM",
+"moonset": "09:00 AM",
+"moon_phase": "Waning Gibbous",
+"moon_illumination": 73
+},
+"air_quality": {
+"co": "481",
+"no2": "39.035",
+"o3": "36",
+"so2": "36.815",
+"pm2_5": "73.63",
+"pm10": "78.44",
+"us-epa-index": "4",
+"gb-defra-index": "4"
+},
+"wind_speed": 16,
+"wind_degree": 209,
+"wind_dir": "SSW",
+"pressure": 1014,
+"precip": 0,
+"humidity": 24,
+"cloudcover": 5,
+"feelslike": 36,
+"uv_index": 9,
+"visibility": 10,
+"is_day": "yes"
+}
+}
+            }
+        },
+        methods:{
+            getWeather(){
+                console.log("Come to me")
+                if(this.location == ""){
+                    alert("Please enetr location or zip code first");
+                    console.error("No location found");
+                    return;
+                }
+                // this.weatherData = null;
+
+                // axios.get(`http://api.weatherstack.com/current?access_key=3ee548b15fd4865c0eac6a26aff95b94&query=${this.location}`)
+                // .then( response => {
+                //     this.weatherData = response.data;
+                //     console.log(this.weatherData); 
+                // }).catch(error => {
+                //     console.error(error);
+                // });
+            }
+        }
+    })
+    app.mount('#app');
+</script>
+
+</html>
