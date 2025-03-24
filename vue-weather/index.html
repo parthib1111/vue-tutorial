@@ -52,6 +52,18 @@
                     <p class="text-lg font-medium text-gray-700">UV Index</p>
                     <p class="text-xl text-gray-500">{{ weatherData.current.uv_index }}</p>
                 </div>
+                <div class="p-6 border border-gray-200 rounded-lg text-center bg-gray-50 shadow-md">
+                    <p class="text-lg font-medium text-gray-700">Feels Like</p>
+                    <p class="text-xl text-gray-500">{{ weatherData.current.feelslike }}°C</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-lg text-center bg-gray-50 shadow-md">
+                    <p class="text-lg font-medium text-gray-700">Sunrise</p>
+                    <p class="text-xl text-gray-500">{{ weatherData.current.astro.sunrise }}</p>
+                </div>
+                <div class="p-6 border border-gray-200 rounded-lg text-center bg-gray-50 shadow-md">
+                    <p class="text-lg font-medium text-gray-700">Sunset</p>
+                    <p class="text-xl text-gray-500">{{ weatherData.current.astro.sunset }}</p>
+                </div>
             </div>
         </div>
     </div>
@@ -62,65 +74,66 @@
         data() {
             return{
                 location: "",
-                weatherData: {
-"request": {
-"type": "City",
-"query": "Arambagh, India",
-"language": "en",
-"unit": "m"
-},
-"location": {
-"name": "Arambagh",
-"country": "India",
-"region": "West Bengal",
-"lat": "22.883",
-"lon": "87.783",
-"timezone_id": "Asia/Kolkata",
-"localtime": "2025-03-20 11:42",
-"localtime_epoch": 1742470920,
-"utc_offset": "5.50"
-},
-"current": {
-"observation_time": "06:12 AM",
-"temperature": 37,
-"weather_code": 113,
-"weather_icons": [
-"https://cdn.worldweatheronline.com/images/wsymbols01_png_64/wsymbol_0001_sunny.png"
-],
-"weather_descriptions": [
-"Sunny"
-],
-"astro": {
-"sunrise": "05:41 AM",
-"sunset": "05:48 PM",
-"moonrise": "11:06 PM",
-"moonset": "09:00 AM",
-"moon_phase": "Waning Gibbous",
-"moon_illumination": 73
-},
-"air_quality": {
-"co": "481",
-"no2": "39.035",
-"o3": "36",
-"so2": "36.815",
-"pm2_5": "73.63",
-"pm10": "78.44",
-"us-epa-index": "4",
-"gb-defra-index": "4"
-},
-"wind_speed": 16,
-"wind_degree": 209,
-"wind_dir": "SSW",
-"pressure": 1014,
-"precip": 0,
-"humidity": 24,
-"cloudcover": 5,
-"feelslike": 36,
-"uv_index": 9,
-"visibility": 10,
-"is_day": "yes"
-}
-}
+                weatherData: null,
+//                 weatherData: {
+// "request": {
+// "type": "City",
+// "query": "Arambagh, India",
+// "language": "en",
+// "unit": "m"
+// },
+// "location": {
+// "name": "Arambagh",
+// "country": "India",
+// "region": "West Bengal",
+// "lat": "22.883",
+// "lon": "87.783",
+// "timezone_id": "Asia/Kolkata",
+// "localtime": "2025-03-20 11:42",
+// "localtime_epoch": 1742470920,
+// "utc_offset": "5.50"
+// },
+// "current": {
+// "observation_time": "06:12 AM",
+// "temperature": 37,
+// "weather_code": 113,
+// "weather_icons": [
+// "https://cdn.worldweatheronline.com/images/wsymbols01_png_64/wsymbol_0001_sunny.png"
+// ],
+// "weather_descriptions": [
+// "Sunny"
+// ],
+// "astro": {
+// "sunrise": "05:41 AM",
+// "sunset": "05:48 PM",
+// "moonrise": "11:06 PM",
+// "moonset": "09:00 AM",
+// "moon_phase": "Waning Gibbous",
+// "moon_illumination": 73
+// },
+// "air_quality": {
+// "co": "481",
+// "no2": "39.035",
+// "o3": "36",
+// "so2": "36.815",
+// "pm2_5": "73.63",
+// "pm10": "78.44",
+// "us-epa-index": "4",
+// "gb-defra-index": "4"
+// },
+// "wind_speed": 16,
+// "wind_degree": 209,
+// "wind_dir": "SSW",
+// "pressure": 1014,
+// "precip": 0,
+// "humidity": 24,
+// "cloudcover": 5,
+// "feelslike": 36,
+// "uv_index": 9,
+// "visibility": 10,
+// "is_day": "yes"
+// }
+// }
             }
         },
         methods:{
@@ -131,15 +144,15 @@
                     console.error("No location found");
                     return;
                 }
-                // this.weatherData = null;
+                this.weatherData = null;
 
-                // axios.get(`http://api.weatherstack.com/current?access_key=3ee548b15fd4865c0eac6a26aff95b94&query=${this.location}`)
-                // .then( response => {
-                //     this.weatherData = response.data;
-                //     console.log(this.weatherData); 
-                // }).catch(error => {
-                //     console.error(error);
-                // });
+                axios.get(`http://api.weatherstack.com/current?access_key=3ee548b15fd4865c0eac6a26aff95b94&query=${this.location}`)
+                .then( response => {
+                    this.weatherData = response.data;
+                    console.log(this.weatherData); 
+                }).catch(error => {
+                    console.error(error);
+                });
             }
         }
     })
