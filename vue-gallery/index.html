@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue 3 Gallery</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Vue 3 CDN -->
+    <script src="https://unpkg.com/vue@3.2.45/dist/vue.global.prod.js"></script>
+    <!-- Axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        /* Custom styles for the lightbox */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .lightbox img {
+            max-width: 80%;
+            max-height: 80%;
+        }
+        .lightbox.active {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+    <div id="app" class="container mx-auto py-8">
+        <h1 class="text-4xl text-center mb-6">Vue Photo Gallery</h1>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Gallery Items -->
+            <div v-for="image in images" :key="image.id" class="group relative">
+                <img :src="image.src.medium" :alt="image.photographer" class="rounded-lg shadow-md cursor-pointer hover:opacity-75" @click="openLightbox(image.src.large)">
+                <!-- Hover Effect for Image Preview -->
+                <div class="absolute inset-0 flex justify-center items-center opacity-0 group-hover:opacity-100 transition duration-300">
+                    <span class="bg-black bg-opacity-50 text-white p-2 rounded">Click to View</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lightbox -->
+        <div v-bind:class="{'lightbox active': showLightbox}" @click="closeLightbox">
+            <img :src="lightboxImage" alt="Lightbox Image" class="cursor-pointer" />
+        </div>
+    </div>
+
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    images: [],
+                    showLightbox: false,
+                    lightboxImage: ''
+                };
+            },
+            mounted() {
+                this.fetchImages();
+            },
+            methods: {
+                fetchImages() {
+                    const apiKey = 'RosNklBMpD29ng9Tcn8XazORdfMFlL206XqT1W4KEyDks6uDS4fy3XFL'; // Replace with your Pexels API key
+                    const apiUrl = 'https://api.pexels.com/v1/curated?per_page=20&page=1';
+                    axios.get(apiUrl, {
+                        headers: {
+                            Authorization: apiKey
+                        }
+                    })
+                    .then(response => {
+                        this.images = response.data.photos;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching images:', error);
+                    });
+                },
+                openLightbox(imageUrl) {
+                    this.lightboxImage = imageUrl;
+                    this.showLightbox = true;
+                },
+                closeLightbox() {
+                    this.showLightbox = false;
+                    this.lightboxImage = '';
+                }
+            }
+        });
+
+        app.mount('#app');
+    </script>
+</body>
+</html>
